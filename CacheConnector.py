@@ -14,10 +14,9 @@ class CacheConnector:
     def __getitem__(self, key, alt):
         return self.__entrails.get(key, alt)
 
-    def get(self, key, alt=None, callback=None):
-        return self.__jobRunner.run(
-            self.__getitem__, self.__rlock, callback, key, alt
-        )
+    def get(self, key, alt=None):
+        # Getting reads does not need to look the table, stale reads alright
+        return self.__getitem__(key, alt)
 
     def __setitem__(self, key, value):
         return self.__entrails.__setitem__(key, value)

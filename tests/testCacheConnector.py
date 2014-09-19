@@ -18,10 +18,6 @@ class TestInitializer(unittest.TestCase):
         key, value = 'NUMA', 0x7485571
         cc.put(key, value)
         self.assertEqual(cc.get(key, value), value)
-        self.assertEqual(cc.get(key, value, print), None) # print returns None
-
-        # Threaded callback is invoked later, so no return value
-        self.assertEqual(cc.get(key, value, lambda *args, **kwargs: 100), None)
 
         __terminationToggle = False
         def dFuncUnchained(*args, **kwargs):
@@ -32,7 +28,7 @@ class TestInitializer(unittest.TestCase):
             __terminationToggle = True
             
 
-        self.assertEqual(cc.get(key, value, dFuncUnchained), None)
+        self.assertEqual(cc.put(key, value, dFuncUnchained), None)
 
         # Expectation here is that dFuncUnchained should keep running
         # even after this test func exits, also __terminationToggle since it
